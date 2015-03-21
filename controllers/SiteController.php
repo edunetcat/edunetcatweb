@@ -93,4 +93,13 @@ class SiteController extends Controller
     {
         return $this->render('about');
     }
+
+    public function actionAssignatures() 
+    {
+        $model = new Assignatures();
+
+        return $this->render('assignatures', [
+            'model' => $model,
+        ]);
+    }
 }
