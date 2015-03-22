@@ -1,13 +1,32 @@
 <?php
 
-namespace app\controllers;
+	namespace app\controllers;
 
-use yii\rest\ActiveController;
-use yii\data\Pagination;
-use app\models\Assignatures;
+	use yii\web\Controller;
+	use yii\data\Pagination;
+	use app\models\Assignatures;
 
-class AssignaturesController extends ActiveController {
-	public $modelClass = 'app\models\Assignatures'; // no cal fer cap accio, nomes aixo i la resta ho fa el yii
-}
+	class AssignaturesController extends Controller {
+
+		public function actionIndex() {
+			$query = Assignatures::find();
+
+			$pagination = new Pagination([
+				'defaultPageSize' => 2,
+				'totalCount' => $query->count(),
+			]);
+
+			$assignatures = $query->orderBy('nomAssignatura')
+				->offset($pagination->offset)
+				->limit($pagination->limit)
+				->all();
+
+			return $this->render('index', [
+				'assignatures' => $assignatures,
+				'pagination' => $pagination,
+			]);
+		}
+
+	}
 
 ?>
