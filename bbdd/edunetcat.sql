@@ -25,10 +25,7 @@ DROP TABLE IF EXISTS `assignatures`;
 CREATE TABLE `assignatures` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `nomAssignatura` varchar(45) DEFAULT NULL,
-  `idCentre` int(11) NOT NULL,
-  PRIMARY KEY (`id`,`idCentre`),
-  KEY `centres_idx` (`idCentre`),
-  CONSTRAINT `centres` FOREIGN KEY (`idCentre`) REFERENCES `centres` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -38,8 +35,37 @@ CREATE TABLE `assignatures` (
 
 LOCK TABLES `assignatures` WRITE;
 /*!40000 ALTER TABLE `assignatures` DISABLE KEYS */;
-INSERT INTO `assignatures` VALUES (1,'Matematiques',1),(2,'Historia',1),(3,'Fisica',1),(4,'Quimica',1);
+INSERT INTO `assignatures` VALUES (1,'Matematiques'),(2,'Historia'),(3,'Fisica'),(4,'Quimica');
 /*!40000 ALTER TABLE `assignatures` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `assignaturescentre`
+--
+
+DROP TABLE IF EXISTS `assignaturescentre`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `assignaturescentre` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `idAssignatura` int(11) DEFAULT NULL,
+  `idCentre` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `FKcentre_idx` (`idCentre`),
+  KEY `FKassignatura` (`idAssignatura`),
+  CONSTRAINT `FKassignatura` FOREIGN KEY (`idAssignatura`) REFERENCES `assignatures` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `FKcentre` FOREIGN KEY (`idCentre`) REFERENCES `centres` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `assignaturescentre`
+--
+
+LOCK TABLES `assignaturescentre` WRITE;
+/*!40000 ALTER TABLE `assignaturescentre` DISABLE KEYS */;
+INSERT INTO `assignaturescentre` VALUES (1,1,1),(2,2,1),(3,3,1),(4,4,1);
+/*!40000 ALTER TABLE `assignaturescentre` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -52,16 +78,16 @@ DROP TABLE IF EXISTS `avaluacio`;
 CREATE TABLE `avaluacio` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `idAlumne` int(11) NOT NULL,
-  `idAssignatura` int(11) NOT NULL,
+  `idItems` int(11) NOT NULL,
   `descripcioItem` varchar(100) DEFAULT NULL,
   `nota` int(11) DEFAULT NULL,
   `pesNotaFinal` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `alumneFK_idx` (`idAlumne`),
-  KEY `assignaturaFK_idx` (`idAssignatura`),
+  KEY `FKItems_idx` (`idItems`),
   CONSTRAINT `alumneFK` FOREIGN KEY (`idAlumne`) REFERENCES `persona` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `assignaturaFK` FOREIGN KEY (`idAssignatura`) REFERENCES `assignatures` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+  CONSTRAINT `FKItems` FOREIGN KEY (`idItems`) REFERENCES `itemsavaluació` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -70,7 +96,6 @@ CREATE TABLE `avaluacio` (
 
 LOCK TABLES `avaluacio` WRITE;
 /*!40000 ALTER TABLE `avaluacio` DISABLE KEYS */;
-INSERT INTO `avaluacio` VALUES (1,1,1,'parcial',8,1),(2,1,1,'parcial',9,1),(3,2,3,'parcial',7,1);
 /*!40000 ALTER TABLE `avaluacio` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -114,8 +139,8 @@ CREATE TABLE `curs` (
   `idCentre` int(11) NOT NULL,
   `idAssignatura` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`,`idCentre`),
-  KEY `assignatures_idx` (`idAssignatura`,`idCentre`),
-  CONSTRAINT `assignatures` FOREIGN KEY (`idAssignatura`, `idCentre`) REFERENCES `assignatures` (`id`, `idCentre`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  KEY `assignatures_idx` (`idAssignatura`),
+  CONSTRAINT `assignatures` FOREIGN KEY (`idAssignatura`) REFERENCES `assignaturescentre` (`idAssignatura`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -145,8 +170,8 @@ CREATE TABLE `expedient` (
   `semestre` varchar(10) NOT NULL,
   `idCentre` int(11) DEFAULT NULL,
   PRIMARY KEY (`idAlumne`,`idAssignatura`,`any`,`semestre`),
-  KEY `alumne assignatura_idx` (`idAssignatura`,`idCentre`),
-  CONSTRAINT `alumneassignatura` FOREIGN KEY (`idAssignatura`, `idCentre`) REFERENCES `assignatures` (`id`, `idCentre`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  KEY `alumneassignatura_idx` (`idAssignatura`),
+  CONSTRAINT `alumneassignatura` FOREIGN KEY (`idAssignatura`) REFERENCES `assignaturescentre` (`idAssignatura`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `assignaturaAlumne` FOREIGN KEY (`idAlumne`) REFERENCES `persona` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -177,8 +202,8 @@ CREATE TABLE `historialassignatures` (
   PRIMARY KEY (`any`,`idAssignatura`,`idCentre`,`semestre`),
   KEY `assignaturaProfessor_idx` (`idAssignatura`),
   KEY `rofessorAssignatura` (`idProfessor`),
-  CONSTRAINT `assignaturaProfessor` FOREIGN KEY (`idAssignatura`) REFERENCES `assignatures` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `rofessorAssignatura` FOREIGN KEY (`idProfessor`) REFERENCES `persona` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  CONSTRAINT `rofessorAssignatura` FOREIGN KEY (`idProfessor`) REFERENCES `persona` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `assignaturaProfessor` FOREIGN KEY (`idAssignatura`) REFERENCES `assignaturescentre` (`idAssignatura`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -190,6 +215,32 @@ LOCK TABLES `historialassignatures` WRITE;
 /*!40000 ALTER TABLE `historialassignatures` DISABLE KEYS */;
 INSERT INTO `historialassignatures` VALUES (7,1,2013,'2','1'),(8,2,2013,'2','1'),(9,3,2013,'2','1');
 /*!40000 ALTER TABLE `historialassignatures` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `itemsavaluació`
+--
+
+DROP TABLE IF EXISTS `itemsavaluació`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `itemsavaluació` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `idAssignatura` int(11) NOT NULL,
+  `idCentre` int(11) NOT NULL,
+  `Descripcio` varchar(100) DEFAULT NULL,
+  `dataEntrega` date DEFAULT NULL,
+  PRIMARY KEY (`id`,`idAssignatura`,`idCentre`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `itemsavaluació`
+--
+
+LOCK TABLES `itemsavaluació` WRITE;
+/*!40000 ALTER TABLE `itemsavaluació` DISABLE KEYS */;
+/*!40000 ALTER TABLE `itemsavaluació` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -213,11 +264,12 @@ CREATE TABLE `persona` (
   `idTipusUsuari` int(11) NOT NULL,
   `idCEntre` int(11) DEFAULT NULL,
   `nivell` int(11) DEFAULT NULL,
+  `tokenApi` varchar(32) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `TipusUsuari_idx` (`idTipusUsuari`),
   KEY `centre_idx` (`idCEntre`),
-  CONSTRAINT `centre` FOREIGN KEY (`idCEntre`) REFERENCES `centres` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `TipusUsuari` FOREIGN KEY (`idTipusUsuari`) REFERENCES `tipususuari` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  CONSTRAINT `TipusUsuari` FOREIGN KEY (`idTipusUsuari`) REFERENCES `tipususuari` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `centre` FOREIGN KEY (`idCEntre`) REFERENCES `centres` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -227,7 +279,7 @@ CREATE TABLE `persona` (
 
 LOCK TABLES `persona` WRITE;
 /*!40000 ALTER TABLE `persona` DISABLE KEYS */;
-INSERT INTO `persona` VALUES (1,'mail1@gmail.com','111111111A','Albert','Acognom Acognom','0000-00-00','Carrer A 1','Barna','08111','aaa',1,1,1),(2,'mail2@gmail.com','222222222B','Bernat','Bcognom Bcognom','0000-00-00','Carrer B 2','Barna','08111','bbb',1,1,1),(3,'mail3@gmail.com','333333333C','Carles','Ccognom Ccognom','0000-00-00','Carrer C 3','Barna','08111','ccc',1,1,1),(4,'mail4@gmail.com','444444444D','Daniel','Dcognom Dcognom','0000-00-00','Carrer D 4','Barna','08111','ddd',1,1,1),(5,'mail5@gmail.com','555555555E','Emili','Ecognom Ecognom','0000-00-00','Carrer E 5','Barna','08111','eee',2,1,3),(6,'mail6@gmail.com','666666666F','Francesc','Fcognom Fcognom','0000-00-00','Carrer F 6','Barna','08111','fff',2,1,3),(7,'mail7@gmail.com','777777777G','Guillem','Gcognom Gcognom','0000-00-00','Carrer G 7','Barna','08111','ggg',2,1,3),(8,'mail8@gmail.com','888888888H','Hugo','Hcognom Hcognom','0000-00-00','Carrer H 8','Barna','08111','hhh',3,1,6),(9,'mail9@gmail.com','999999999I','Isaac','Icognom Icognom','0000-00-00','Carrer I 9','Barna','08111','iii',3,1,6),(10,'mail10@gmail.com','100000000J','Joan','Jcognom Jcognom','0000-00-00','Carrer J 10','Barna','08111','jjj',3,1,6),(11,'mail11@gmail.com','110000000J','Kilian','Kcognom Kcognom','0000-00-00','Carrer K 11','Barna','08111','kkk',4,1,9);
+INSERT INTO `persona` VALUES (1,'mail1@gmail.com','111111111A','Albert','Acognom Acognom','0000-00-00','Carrer A 1','Barna','08111','aaa',1,1,1,''),(2,'mail2@gmail.com','222222222B','Bernat','Bcognom Bcognom','0000-00-00','Carrer B 2','Barna','08111','bbb',1,1,1,''),(3,'mail3@gmail.com','333333333C','Carles','Ccognom Ccognom','0000-00-00','Carrer C 3','Barna','08111','ccc',1,1,1,''),(4,'mail4@gmail.com','444444444D','Daniel','Dcognom Dcognom','0000-00-00','Carrer D 4','Barna','08111','ddd',1,1,1,''),(5,'mail5@gmail.com','555555555E','Emili','Ecognom Ecognom','0000-00-00','Carrer E 5','Barna','08111','eee',2,1,3,''),(6,'mail6@gmail.com','666666666F','Francesc','Fcognom Fcognom','0000-00-00','Carrer F 6','Barna','08111','fff',2,1,3,''),(7,'mail7@gmail.com','777777777G','Guillem','Gcognom Gcognom','0000-00-00','Carrer G 7','Barna','08111','ggg',2,1,3,''),(8,'mail8@gmail.com','888888888H','Hugo','Hcognom Hcognom','0000-00-00','Carrer H 8','Barna','08111','hhh',3,1,6,''),(9,'mail9@gmail.com','999999999I','Isaac','Icognom Icognom','0000-00-00','Carrer I 9','Barna','08111','iii',3,1,6,''),(10,'mail10@gmail.com','100000000J','Joan','Jcognom Jcognom','0000-00-00','Carrer J 10','Barna','08111','jjj',3,1,6,''),(11,'mail11@gmail.com','110000000J','Kilian','Kcognom Kcognom','0000-00-00','Carrer K 11','Barna','08111','kkk',4,1,9,'');
 /*!40000 ALTER TABLE `persona` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -253,7 +305,6 @@ CREATE TABLE `relacions` (
 
 LOCK TABLES `relacions` WRITE;
 /*!40000 ALTER TABLE `relacions` DISABLE KEYS */;
-INSERT INTO `relacions` VALUES (6,1),(5,2),(4,3);
 /*!40000 ALTER TABLE `relacions` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -290,4 +341,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-03-24 19:24:23
+-- Dump completed on 2015-03-30 12:50:58
