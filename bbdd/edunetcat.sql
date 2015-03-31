@@ -4,6 +4,10 @@
 -- ------------------------------------------------------
 -- Server version	5.6.17
 
+CREATE SCHEMA IF NOT EXISTS `edunetcat` ;
+
+USE `edunetcat`;
+
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
@@ -264,7 +268,7 @@ CREATE TABLE `persona` (
   `idTipusUsuari` int(11) NOT NULL,
   `idCEntre` int(11) DEFAULT NULL,
   `nivell` int(11) DEFAULT NULL,
-  `tokenApi` varchar(32) DEFAULT NULL,
+  `authKey` varchar(32) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `TipusUsuari_idx` (`idTipusUsuari`),
   KEY `centre_idx` (`idCEntre`),
