@@ -11,6 +11,9 @@ use app\models\ContactForm;
 
 class SiteController extends Controller
 {
+
+    public $layout = 'login';
+
     public function behaviors()
     {
         return [
@@ -28,7 +31,7 @@ class SiteController extends Controller
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
-                    'logout' => ['post'],
+                    'logout' => ['get'],
                 ],
             ],
         ];
@@ -49,18 +52,29 @@ class SiteController extends Controller
 
     public function actionIndex()
     {
-        return $this->render('index');
+        //si no està logat
+        if (Yii::$app->user->isGuest) {
+            return $this->actionLogin();
+        } else {
+            //carrega layout 'main'
+            $this->layout = 'main';
+            
+            //afegeix al layout la vista
+            return $this->render('index');    
+        }
     }
 
     public function actionLogin()
     {
-        if (!\Yii::$app->user->isGuest) {
-            return $this->goHome();
-        }
-
+        //a partir d'aquí, només s'executa si s'està loguejat
+        //crea nou model
         $model = new LoginForm();
-        if ($model->load(Yii::$app->request->post()) && $model->login()) {
-            return $this->goBack();
+
+        //si es rep petició POST i el login es correcte
+        if ($model->load(Yii::$app->request->post()) && $model->login()) 
+        {            
+            //torna a l'inici actionIndex
+            return $this->goHome();
         } else {
             return $this->render('login', [
                 'model' => $model,
@@ -75,6 +89,7 @@ class SiteController extends Controller
         return $this->goHome();
     }
 
+    /*
     public function actionContact()
     {
         $model = new ContactForm();
@@ -101,5 +116,5 @@ class SiteController extends Controller
         return $this->render('assignatures', [
             'model' => $model,
         ]);
-    }
+    }*/
 }
