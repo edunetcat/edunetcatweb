@@ -4,10 +4,6 @@
 -- ------------------------------------------------------
 -- Server version	5.6.17
 
-CREATE SCHEMA IF NOT EXISTS `edunetcat` ;
-
-USE `edunetcat`;
-
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
@@ -131,6 +127,36 @@ INSERT INTO `centres` VALUES (1,'centre01','C/ Centre01','93721111111','Barcelon
 UNLOCK TABLES;
 
 --
+-- Table structure for table `correus`
+--
+
+DROP TABLE IF EXISTS `correus`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `correus` (
+  `idMissatge` int(11) NOT NULL,
+  `IdReceptor` int(11) NOT NULL,
+  `IdEmissor` int(11) DEFAULT NULL,
+  `Llegit` tinyint(1) DEFAULT NULL,
+  PRIMARY KEY (`idMissatge`,`IdReceptor`),
+  KEY `FKEmissor_idx` (`IdEmissor`),
+  KEY `FKReceptor_idx` (`IdReceptor`),
+  CONSTRAINT `FKMissatge` FOREIGN KEY (`idMissatge`) REFERENCES `missatges` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `FKEmissor` FOREIGN KEY (`IdEmissor`) REFERENCES `persona` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `FKReceptor` FOREIGN KEY (`IdReceptor`) REFERENCES `persona` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `correus`
+--
+
+LOCK TABLES `correus` WRITE;
+/*!40000 ALTER TABLE `correus` DISABLE KEYS */;
+/*!40000 ALTER TABLE `correus` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `curs`
 --
 
@@ -248,6 +274,33 @@ LOCK TABLES `itemsavaluació` WRITE;
 UNLOCK TABLES;
 
 --
+-- Table structure for table `missatges`
+--
+
+DROP TABLE IF EXISTS `missatges`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `missatges` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `Descripcio` varchar(100) DEFAULT NULL,
+  `DataEnvio` date DEFAULT NULL,
+  `HoraEnvio` datetime DEFAULT NULL,
+  `Missatge` varchar(1000) DEFAULT NULL,
+  `ArxiuAdjunt` varchar(150) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `missatges`
+--
+
+LOCK TABLES `missatges` WRITE;
+/*!40000 ALTER TABLE `missatges` DISABLE KEYS */;
+/*!40000 ALTER TABLE `missatges` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `persona`
 --
 
@@ -345,4 +398,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-03-30 12:50:58
+-- Dump completed on 2015-04-03 11:51:07
