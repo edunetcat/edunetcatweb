@@ -30,7 +30,7 @@ AppAsset::register($this);
     <link href="css/font-awesome.min.css" rel="stylesheet" type="text/css">
 
 </head>
-<body>
+<body ng-app="panellApp">
 
 
 
@@ -46,18 +46,23 @@ AppAsset::register($this);
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="#">Edunet.cat - Panell Alumnes</a>
+                <a class="navbar-brand" href="">Edunet.cat - Panell Alumnes</a>
             </div>
             <!-- /.navbar-header -->
+            
+            
 
             <ul class="nav navbar-top-links navbar-right">
+                <li>
+                    <a>AuthKey: <?php echo Yii::$app->user->identity->getAuthKey() ?></a>
+                </li>
                 <li class="dropdown">
-                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="">
                         <i class="fa fa-envelope fa-fw"></i> Missatges <i class="fa fa-caret-down"></i>
                     </a>
                     <ul class="dropdown-menu dropdown-messages">
                         <li>
-                            <a href="#">
+                            <a href="">
                                 <div>
                                     <strong>Manuel Lopera</strong>
                                     <span class="pull-right text-muted">
@@ -69,7 +74,7 @@ AppAsset::register($this);
                         </li>
                         <li class="divider"></li>
                         <li>
-                            <a href="#">
+                            <a href="">
                                 <div>
                                     <strong>Marcos Torrent</strong>
                                     <span class="pull-right text-muted">
@@ -81,7 +86,7 @@ AppAsset::register($this);
                         </li>
                         <li class="divider"></li>
                         <li>
-                            <a class="text-center" href="#">
+                            <a class="text-center" href="">
                                 <strong>Llegir la resta de missatges</strong>
                                 <i class="fa fa-angle-right"></i>
                             </a>
@@ -93,13 +98,13 @@ AppAsset::register($this);
                 
                 <!-- /.dropdown -->
                 <li class="dropdown">
-                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="">
                         <i class="fa fa-user fa-fw"></i> Tomàs <i class="fa fa-caret-down"></i>
                     </a>
                     <ul class="dropdown-menu dropdown-user">
-                        <li><a href="#"><i class="fa fa-user fa-fw"></i> Perfil</a>
+                        <li><a href=""><i class="fa fa-user fa-fw"></i> Perfil</a>
                         </li>
-                        <li><a href="#"><i class="fa fa-gear fa-fw"></i> Compte</a>
+                        <li><a href=""><i class="fa fa-gear fa-fw"></i> Compte</a>
                         </li>
                         <li class="divider"></li>
                         <li><a href="index.php?r=site/logout"><i class="fa fa-sign-out fa-fw"></i> Logout</a>
@@ -126,31 +131,34 @@ AppAsset::register($this);
                             <!-- /input-group -->
                         </li>
                         <li>
-                            <a href="#"><i class="fa fa-dashboard fa-fw"></i> Panell Alumnes</a>
+                            <a href="/#/"><i class="fa fa-dashboard fa-fw"></i> Panell Alumnes</a>
                         </li>
                         <li>
-                            <a href="#"><i class="fa fa-sign-in fa-fw"></i> Tràmits</a>
+                            <a href="/#/centres"><i class="fa fa-building fa-fw"></i> Administrar Centres</a>
                         </li>
                         <li>
-                            <a href="#"><i class="fa fa-envelope-o fa-fw"></i> Missatges</a>
+                            <a href=""><i class="fa fa-sign-in fa-fw"></i> Tràmits</a>
                         </li>
                         <li>
-                            <a href="#"><i class="fa fa-calendar-o fa-fw"></i> Calendari</a>
+                            <a href=""><i class="fa fa-envelope-o fa-fw"></i> Missatges</a>
                         </li>
                         <li>
-                            <a href="#"><i class="fa fa-bar-chart-o fa-fw"></i> Expedient acadèmic</a>
+                            <a href=""><i class="fa fa-calendar-o fa-fw"></i> Calendari</a>
                         </li>
                         <li>
-                            <a href="#"><i class="fa fa-edit fa-fw"></i> Avaluació <span class="fa arrow"></span></a>
+                            <a href=""><i class="fa fa-bar-chart-o fa-fw"></i> Expedient acadèmic</a>
+                        </li>
+                        <li>
+                            <a href=""><i class="fa fa-edit fa-fw"></i> Avaluació <span class="fa arrow"></span></a>
                             <ul class="nav nav-second-level">
                                 <li>
-                                    <a href="#">M01 - Assignatura de proba</a>
+                                    <a href="">M01 - Assignatura de proba</a>
                                 </li>
                                 <li>
-                                    <a href="#">M02 - Base de Dades</a>
+                                    <a href="">M02 - Base de Dades</a>
                                 </li>
                                 <li>
-                                    <a href="#">M03 - Sistemes</a>
+                                    <a href="">M03 - Sistemes</a>
                                 </li>
                             </ul>
                             <!-- /.nav-second-level -->
@@ -162,22 +170,30 @@ AppAsset::register($this);
             <!-- /.navbar-static-side -->
         </nav>       
         
+
         <?= $content ?>
 
     </div>
-    <!-- /#wrapper -->
+    <!-- /wrapper -->
     
     <!-- jQuery -->
     <script src="/js/jquery-1.11.1.min.js"></script>
-
+    
     <!-- Bootstrap Core JavaScript -->
     <script src="/js/bootstrap.min.js"></script>
     
     <!-- Metis Menu Plugin JavaScript -->
     <script src="/js/metisMenu.min.js"></script>
 
-    <!-- Custom Theme JavaScript -->
-    <script src="/js/panell.js"></script>
+    <!-- angular 1.4.0-rc.0 -->
+    <script src="/js/angular.min.js"></script>
+    <script src="/js/angular-route.min.js"></script>
+
+    <!-- Custom JavaScript -->
+    <script src="/js/panellapp.js"></script>
+    <script src="/js/controllers.js"></script>
+
+    
 
 <?php $this->endBody() ?>
 </body>

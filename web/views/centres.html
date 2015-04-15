@@ -1,0 +1,83 @@
+<div ng-controller="CentresListCtrl">
+
+	<div class="row">
+	    <div class="col-lg-12">
+	        <h1 class="page-header">Administració de centres</h1>
+	    </div>
+	    <!-- /.col-lg-12 -->
+	</div>
+	<!-- /.row -->
+
+	<div class="row">
+	    <div class="col-lg-8">
+	        <!-- /.panel -->
+	        <div class="panel panel-default">
+	            <div class="panel-heading">
+	                <i class="fa fa-bar-chart-o fa-fw"></i> Missatges nous:
+	            </div>
+	            <!-- /.panel-heading -->
+	            <div class="panel-body">
+	                <div class="row">
+	                    <div class="col-lg-12">
+
+
+	                    	<label for="ordreCentres">Ordre</label>
+	                        <select name="ordreCentres" ng-model="orderProp">
+					          <option value="name">Per nom del centre</option>
+					          <option value="adreca">Per l'adreça</option>
+					        </select>
+
+					        <table class="table table-striped col-lg-12">
+					            <thead>
+					                <tr>
+					                    <th ng-click="orderProp = 'name'">Centre</th>
+					                    <th ng-click="orderProp = 'adreca'">Adreça</th>                            
+					                </tr>
+					            </thead>
+					            <tr ng-repeat="centre in centres | orderBy:orderProp">
+					                <td>{{centre.name}}</td>
+					                <td>{{centre.adreca}}</td>
+					            </tr>
+					        </table>
+
+
+	                    </div>
+	                    <!-- /.col-lg-4 (nested) -->
+	                    <div class="col-lg-8">
+	                        <div id="morris-bar-chart"></div>
+	                    </div>
+	                    <!-- /.col-lg-8 (nested) -->
+	                </div>
+	                <!-- /.row -->
+	            </div>
+	            <!-- /.panel-body -->
+	        </div>
+	        <!-- /.panel -->                    
+	    </div>
+	    <!-- /.col-lg-8 -->
+
+	    <div class="col-lg-4">
+	        <div class="panel panel-default">
+	            <div class="panel-heading">
+	                <i class="fa fa-bell fa-fw"></i> Altres opcions
+	            </div>
+	            <!-- /.panel-heading -->
+	            <div class="panel-body">
+	                
+	                <a href="#" class="btn btn-default btn-block">Veure totes les alertes</a>
+	                <a href="#" class="btn btn-default btn-block">Veure totes les alertes</a>
+	                <a href="#" class="btn btn-default btn-block">Veure totes les alertes</a>
+	                <a href="#" class="btn btn-default btn-block">Veure totes les alertes</a>
+
+	                
+	                <!-- /.list-group -->
+	            </div>
+	            <!-- /.panel-body -->
+	        </div>
+	        <!-- /.panel -->
+	    </div>
+	    <!-- /.col-lg-4 -->
+	</div>
+	<!-- /.row -->
+
+</div>	
